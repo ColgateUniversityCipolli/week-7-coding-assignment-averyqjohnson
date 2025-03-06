@@ -1,0 +1,175 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[margin=1.0in]{geometry} % To set margins
+\usepackage{amsmath}  % This allows me to use the align functionality.
+                      % If you find yourself trying to replicate
+                      % something you found online, ensure you're
+                      % loading the necessary packages!
+\usepackage{amsfonts} % Math font
+\usepackage{fancyvrb}
+\usepackage{hyperref} % For including hyperlinks
+\usepackage[shortlabels]{enumitem}% For enumerated lists with labels specified
+                                  % We had to run tlmgr_install("enumitem") in R
+\usepackage{float}    % For telling R where to put a table/figure
+\usepackage{natbib}        %For the bibliography
+\bibliographystyle{apalike}%For the bibliography
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+  \begin{enumerate}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Question 1
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \item Write a \texttt{pois.prob()} function that computes $P(X=x)$, 
+    $P(X \neq x)$, $P(X<x)$, $P(X \leq x)$, $P(X > x)$, and $P(X \geq x).$ Enable the user to specify the rate parameter $\lambda$.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{pois.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{lambda}\hldef{,} \hlkwc{type}\hldef{)\{}
+  \hlkwa{if} \hldef{(type} \hlopt{==} \hlsng{"="}\hldef{)\{}
+    \hlkwd{return} \hldef{(}\hlkwd{dpois}\hldef{(x, lambda))} \hlcom{#P(X=x) def of PMF}
+  \hldef{\}} \hlkwa{else if} \hldef{(type}\hlopt{==} \hlsng{"!="}\hldef{) \{}
+    \hlkwd{return} \hldef{(}\hlnum{1} \hlopt{-} \hlkwd{dpois}\hldef{(x, lambad))} \hlcom{# complement rule }
+  \hldef{\}} \hlkwa{else if} \hldef{(type}\hlopt{==} \hlsng{"<"}\hldef{)\{}
+    \hlkwd{return}\hldef{(}\hlkwd{ppois}\hldef{(x}\hlopt{-}\hlnum{1}\hldef{, lambda))}  \hlcom{# P(X < x) = P(X <= x-1)}
+  \hldef{\}} \hlkwa{else if} \hldef{(type} \hlopt{==} \hlsng{"<="}\hldef{) \{}
+    \hlkwd{return}\hldef{(}\hlkwd{ppois}\hldef{(x, lambda))} \hlcom{# P (X < = x) def of CDF}
+  \hldef{\}} \hlkwa{else if} \hldef{(type} \hlopt{==} \hlsng{">"}\hldef{) \{}
+    \hlkwd{return}\hldef{(}\hlnum{1} \hlopt{-} \hlkwd{ppois}\hldef{(x, lambda))} \hlcom{# complement rule}
+  \hldef{\}} \hlkwa{else if} \hldef{(type} \hlopt{==} \hlsng{">="}\hldef{)\{}
+    \hlkwd{return}\hldef{(}\hlnum{1} \hlopt{-} \hlkwd{ppois}\hldef{(x}\hlopt{-}\hlnum{1}\hldef{, lambda))} \hlcom{# P (X >= x) = 1 - P(X<x) = 1 - P(X <= x-1)}
+  \hldef{\}}
+\hldef{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+In this step, I implemented \texttt{pois.prob()}, a function that computes 
+probabilities from a Poisson distribution given an input value \texttt{x},
+rate parameter \texttt{lambda}, and a probability type. The Poisson distribution
+is a discrete probability distribution, meaning it assigns probabilities
+to specific values of the random variable $X$. We calculate the probability
+at a given value \texttt{x} using the probability mass function (PMF).
+
+
+When the type is \texttt{"="}, the function computes the probability of
+\texttt{X=x} using the PMF. For \texttt{"!="}, the probability is computed as 
+the complement of \texttt{P(X=x)}, i.e., $P (X \neq x) = 1 - P(X=x)$. To compute
+$P(X < x)$, we use $P(X \leq x-1)$, which is given by the CDF at $x-1$.
+This works because the Poisson distribution only takes integer values. Therefore, since
+the probability $X$ is strictly less than $x$, it is equivalent to the probability
+that $X$ is less than or equal to $x-1$, so we can calculate this as the CDF
+at $x-1$. For \texttt{"<="}, we directly use the CDF, as that is the definition.
+Finally, we use the complement rule for \texttt{">"} and \texttt{">="}.
+
+
+The key distinction here is that Poisson distributions are discrete, and thus
+we can compute the probability of specific values of $X$. For probabilities 
+involving inequalities, we utilize the CDF and apply the complement rule and the
+fact that discrete distributions only take on integer values when needed.
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Question 2
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \item Write a \texttt{beta.prob()} function that computes $P(X=x)$, 
+    $P(X \neq x)$, $P(X<x)$, $P(X \leq x)$, $P(X > x)$, and $P(X \geq x)$
+    for a beta distribution. Enable the user to specify the shape parameters
+    $\alpha$ and $\beta$.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{beta.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{alpha}\hldef{,} \hlkwc{beta}\hldef{,} \hlkwc{type}\hldef{)\{}
+  \hlkwa{if} \hldef{(type} \hlopt{==} \hlsng{"="}\hldef{)\{}
+    \hlkwd{return}\hldef{(}\hlnum{0}\hldef{)}                 \hlcom{# prob of exact value of continuous dist always 0}
+  \hldef{\}} \hlkwa{else if} \hldef{(type}\hlopt{==} \hlsng{"!="}\hldef{) \{}
+    \hlkwd{return}\hldef{(}\hlnum{1}\hldef{)}                 \hlcom{# complement rule}
+  \hldef{\}} \hlkwa{else if} \hldef{(type}\hlopt{==} \hlsng{"<"}\hldef{)\{}
+    \hlkwd{return}\hldef{(}\hlkwd{pbeta}\hldef{(x, alpha, beta))} \hlcom{# P(X<x) bc continous = P(X<=x)}
+  \hldef{\}} \hlkwa{else if} \hldef{(type} \hlopt{==} \hlsng{"<="}\hldef{) \{}
+    \hlkwd{return}\hldef{(}\hlkwd{pbeta}\hldef{(x, alpha, beta))} \hlcom{# P(X<=x) def of CDF}
+  \hldef{\}} \hlkwa{else if} \hldef{(type} \hlopt{==} \hlsng{">"}\hldef{) \{}
+    \hlkwd{return}\hldef{(}\hlnum{1} \hlopt{-} \hlkwd{pbeta}\hldef{(x, alpha, beta))} \hlcom{# complement rule}
+  \hldef{\}} \hlkwa{else if} \hldef{(type} \hlopt{==} \hlsng{">="}\hldef{)\{}
+    \hlkwd{return}\hldef{(}\hlnum{1} \hlopt{-} \hlkwd{pbeta}\hldef{(x, alpha, beta))} \hlcom{# same as above bc continuous}
+  \hldef{\}}
+\hldef{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+In this step, I implemented \texttt{beta.prob()}, a function that computes
+probabilities from a Beta distribution given an input value \texttt{x},
+shape parameters \texttt{alpha} and \texttt{beta}, and a probability type.
+Unlike the Poisson distribution, which is discrete, the Beta distribution is
+a continuous probability, meaning it does not assign probabilities to
+specific values of $X$. Instead, it assigns probabilities to intervals of $X$,
+so the probability of any exact value is always zero. Therefore, when calculating 
+probabilities, we never use the probability mass function (PMF). We only use the
+cumulative distribution function (CDF) to calculate probabilities.
+
+
+When the type is \texttt{"="}, the probability of \texttt{X=x} is zero,
+as continuous distributions do not assign probabilities to single points.
+For \texttt{"!="}, the probability is computed as the complement, meaning
+$P(X \neq x) = 1$ because the probability of any specific value is always zero.
+To compute $P(X < x)$ or $P(X \leq x)$, we use the CDF. In continuous distributions,
+$P(X < x) = P(X \leq x)$ because the probability of a single point is zero.
+Similarly, for \texttt{">"} and \texttt{">="}, these values are equal, and we 
+again apply the complement rule.
+
+
+In summary, the key difference between continuous and discrete distributions is
+that for continuous distributions, we cannot compute probabilities of exact values
+of $X$. Instead, probabilities are assigned to intervals, and we rely on the CDF
+for all calculations.
+
+\end{enumerate}
+\bibliography{bibliography}
+\end{document}
